@@ -80,7 +80,7 @@ def check_availability():
             else:
                 nums = re.findall(r'\d+', link_text)
                 for n in nums:
-                    if int(n) >= 2: # 2席以上
+                    if int(n) >= 1: # 1席以上
                         is_avail = True
                         break
             
