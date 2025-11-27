@@ -4,7 +4,7 @@ import json
 import unicodedata
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, date
 import re
 
 from selenium import webdriver
@@ -12,10 +12,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 # 設定
-# ★URLはカレンダーが表示される状態のものを維持
-BASE_URL = "https://ana-blue-hangar-tour.resv.jp/reserve/calendar.php?x=....." 
+BASE_URL = "https://ana-blue-hangar-tour.resv.jp/reserve/calendar.php?x=....." # ★URLはそのまま
 NOTIFIED_FILE = "notified_dates.txt"
 TARGET_TIMES = ["9:30", "10:45", "13:00", "14:15", "15:30"]
+WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"]
 
 # LINE Messaging API 設定
 LINE_ACCESS_TOKEN = os.environ.get("LINE_ACCESS_TOKEN")
@@ -37,8 +37,28 @@ def send_line_message(message):
         print(f"LINE送信エラー: {e}")
 
 def parse_html(html, notified_slots, found_slots, new_notified_slots):
-    """HTMLから空き情報を抽出する（共通処理）"""
+    """HTMLから空き情報を抽出する"""
     soup = BeautifulSoup(html, 'lxml')
+    
+    # --- 1. まず「今、何年の何月を表示しているか」を取得 ---
+    # id="period_area" の中身 (例: "2025年11月") を探す
+    period_area = soup.find(id="period_area")
+    current_year = 0
+    current_month = 0
+    
+    if period_area:
+        period_text = period_area.get_text(strip=True)
+        # "2025年11月" から数字を抜き出す
+        m = re.search(r'(\d+)年(\d+)月', period_text)
+        if m:
+            current_year = int(m.group(1))
+            current_month = int(m.group(2))
+            print(f"  [Info] Calendar is showing: {current_year}年 {current_month}月")
+    
+    if current_year == 0:
+        print("  [Error] Could not identify Year/Month from header.")
+        return # 年月が取れないと曜日計算できないのでスキップ
+
     cells = soup.find_all('td')
     print(f"  -> Cells found: {len(cells)}")
 
@@ -48,17 +68,27 @@ def parse_html(html, notified_slots, found_slots, new_notified_slots):
 
         text_norm = unicodedata.normalize('NFKC', text_all)
         
-        # 1. 日付特定
+        # --- 2. 日付特定 ---
         day_match = re.match(r'^(\d+)', text_norm)
         if not day_match: continue
-        day_str = day_match.group(1)
+        day_val = int(day_match.group(1))
 
-        # 2. 時間枠チェック
+        # --- 3. 曜日を計算 ---
+        try:
+            # datetimeオブジェクト作成
+            target_date = date(current_year, current_month, day_val)
+            # 曜日取得 (0=月, 6=日)
+            wd_str = WEEKDAYS[target_date.weekday()]
+        except ValueError:
+            # ありえない日付（2月30日など）の場合の安全策
+            continue
+
+        # --- 4. 時間枠チェック ---
         for time_str in TARGET_TIMES:
             is_avail = False
             seat_info = ""
             
-            # パターンA: 残数明記 (例: 残19:30)
+            # パターンA: 残数明記
             pattern_zan = re.compile(f'残(\d+){time_str}')
             match_zan = pattern_zan.search(text_norm)
             
@@ -68,7 +98,7 @@ def parse_html(html, notified_slots, found_slots, new_notified_slots):
                     is_avail = True
                     seat_info = f"残り{seats}席"
             
-            # パターンB: 記号 (直前をチェック)
+            # パターンB: 記号
             if not is_avail:
                 idx = text_norm.find(time_str)
                 if idx != -1:
@@ -81,15 +111,24 @@ def parse_html(html, notified_slots, found_slots, new_notified_slots):
                         seat_info = "残りわずか(△)"
 
             if is_avail:
-                display_text = f"【{day_str}日 {time_str}】 {seat_info}"
+                # 表示テキストを作成： 【11月28日(金) 9:30】
+                display_text = f"【{current_month}月{day_val}日({wd_str}) {time_str}】 {seat_info}"
                 print(f"    MATCH! Found: {display_text}")
 
-                today = datetime.now().strftime("%Y-%m-%d")
-                # キーに年月を含めたいが、画面からは「日」しか取れないため
-                # 実行日ベースで重複排除する（簡易実装）
-                unique_key = f"{today}: {day_str} {time_str} {seat_info}"
+                # ユニークキー： 年月日を含めて一意にする
+                # 例: "2025-11-28 9:30 残り1席"
+                # これにより、同じ日時でも席数が変われば再度通知されるか、
+                # あるいは「席数」をキーから外せば「一度通知したらその回は無視」になる。
+                # ここでは「日付+時間+席数」をキーにする（席数が減ったらまた通知してしまうのを防ぐため、席数はキーに含めない方がいいかも？
+                # 要望「一度通知したらその日は通知しない」に従い、席数はキーに含めず、日時だけで管理します。
                 
-                if not any(unique_key in s for s in notified_slots if s.startswith(today)):
+                unique_key_date = f"{current_year}-{current_month}-{day_val} {time_str}"
+                
+                # 今日の日付（実行日）をキーの先頭につけることで「明日になればまた通知する」を実現
+                today_exec = datetime.now().strftime("%Y-%m-%d")
+                unique_key = f"{today_exec} -> {unique_key_date}"
+                
+                if not any(unique_key in s for s in notified_slots if s.startswith(today_exec)):
                     if display_text not in found_slots:
                         found_slots.append(display_text)
                         new_notified_slots.append(unique_key)
@@ -117,27 +156,23 @@ def check_availability():
     driver = webdriver.Chrome(options=options)
     
     try:
-        # --- 1ページ目（今月） ---
+        # --- 1ページ目 ---
         print(f"Loading page 1... {BASE_URL[:30]}...")
         driver.get(BASE_URL)
-        time.sleep(5) # 描画待ち
+        time.sleep(5)
         
         print("Parsing page 1...")
         parse_html(driver.page_source, notified_slots, found_slots, new_notified_slots)
         
-        # --- 2ページ目（次月）への移動 ---
+        # --- 2ページ目 ---
         try:
             print("Looking for Next Month button (#next a)...")
-            
-            # ★ここを修正: IDが 'next' の要素の中にあるリンクを探す
             next_btns = driver.find_elements(By.CSS_SELECTOR, "#next a")
             
             if next_btns:
                 print("Clicking Next Month button...")
-                
-                # JavaScriptのリンクなのでclick()で発火
                 driver.execute_script("arguments[0].click();", next_btns[0])
-                time.sleep(5) # 画面切り替わり待ち
+                time.sleep(5)
                 
                 print("Parsing page 2...")
                 parse_html(driver.page_source, notified_slots, found_slots, new_notified_slots)
@@ -155,6 +190,10 @@ def check_availability():
     # 通知処理
     if found_slots:
         print(f"Total slots found: {len(found_slots)}")
+        
+        # リストが見やすいようにソート（日付順）する処理を入れるとベターですが
+        # 現状は取得順（カレンダー順）なのでそのままでも概ね綺麗です
+        
         msg = "✈️ ANA工場見学 空き発生！\n\n" + "\n".join(found_slots) + f"\n\n予約: {BASE_URL}"
         send_line_message(msg)
         
