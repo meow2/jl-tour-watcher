@@ -1,0 +1,29 @@
+name: JAL Factory Tour Monitor
+
+on:
+  schedule:
+    # 5分おきに実行 (GitHub Actionsの仕様上、多少遅れることがあります)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # 手動実行ボタンを有効にする
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run scraping script
+        env:
+          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+        run: python main.py
