@@ -2,13 +2,16 @@ name: JAL Factory Tour Monitor
 
 on:
   schedule:
-    # 5分おきに実行 (GitHub Actionsの仕様上、多少遅れることがあります)
     - cron: '*/5 * * * *'
-  workflow_dispatch: # 手動実行ボタンを有効にする
+  workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    
+    # 権限設定（リポジトリへの書き込み権限を与える）
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -25,6 +28,14 @@ jobs:
 
       - name: Run scraping script
         env:
-          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }} # これはMessaging APIのトークンに入れ替え
-          LINE_GROUP_ID: ${{ secrets.LINE_GROUP_ID }} # ★これを追加
+          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+          LINE_GROUP_ID: ${{ secrets.LINE_GROUP_ID }}
         run: python main.py
+
+      # 【重要】更新された notified_dates.txt をリポジトリに保存する
+      - name: Commit and push if changed
+        run: |
+          git config user.name "Automated"
+          git config user.email "actions@users.noreply.github.com"
+          git add notified_dates.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update notified dates" && git push)
