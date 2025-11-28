@@ -25,5 +25,6 @@ jobs:
 
       - name: Run scraping script
         env:
-          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }} # これはMessaging APIのトークンに入れ替え
+          LINE_GROUP_ID: ${{ secrets.LINE_GROUP_ID }} # ★これを追加
         run: python main.py
