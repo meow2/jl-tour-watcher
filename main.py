@@ -18,8 +18,8 @@ def send_line_notify(message):
         headers = {"Authorization": f"Bearer {LINE_NOTIFY_TOKEN}"}
         data = {"message": message}
         requests.post(url, headers=headers, data=data)
-    except Exception as e:
-        print(f"LINE送信エラー: {e}")
+    except:
+        pass
 
 def check_availability():
     print("--- 監視開始 ---")
@@ -27,8 +27,6 @@ def check_availability():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    # ウィンドウサイズを大きくしておく（レスポンシブで表示が消えるのを防ぐ）
-    options.add_argument('--window-size=1920,1080')
     options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36')
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -37,52 +35,43 @@ def check_availability():
         print(f"URLへアクセス中: {TARGET_URL}")
         driver.get(TARGET_URL)
 
-        # 30秒待機
+        # 待機
         wait = WebDriverWait(driver, 30)
         
-        # デバッグ用：タイトル表示
-        print(f"ページタイトル: {driver.title}")
+        # ページの状態をログに出力（ここが重要）
+        print("--------------------------------------------------")
+        print(f"【現在開いているページ】")
+        print(f"URL: {driver.current_url}")
+        print(f"タイトル: {driver.title}")
+        print("--------------------------------------------------")
 
-        # カレンダーテーブルの出現を待つ
+        # カレンダーがあるか確認
         try:
             calendar_table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "tStyleC")))
-            print("カレンダーテーブル(tStyleC)を発見しました。")
+            print("カレンダー(tStyleC)は見つかりました。")
+            
+            # 空き枠チェック
+            available_slots = calendar_table.find_elements(By.CLASS_NAME, "staHav")
+            
+            if len(available_slots) > 0:
+                print(f"★空き枠発見！({len(available_slots)}箇所)")
+                send_line_notify(f"\nJAL工場見学の空きが出ました！\n{TARGET_URL}")
+            else:
+                print("空き枠は見つかりませんでした（staHavなし）。")
+                # 念のためHTMLの一部を表示して、本当にカレンダーが見えているか確認
+                print("\n▼▼▼ HTMLソース確認（tStyleCの中身） ▼▼▼")
+                print(calendar_table.get_attribute('innerHTML')[:2000]) # 最初の2000文字を表示
+                print("▲▲▲ HTMLソース確認終了 ▲▲▲")
+
         except:
-            print("【警告】カレンダーテーブルが見つかりません。ロード中か、別ページに飛ばされています。")
-            raise Exception("Calendar table not found")
-
-        time.sleep(5) # 描画待ち
-
-        # HTMLソース全体の取得（デバッグ保存用）
-        html_source = driver.page_source
-        with open("debug_page.html", "w", encoding="utf-8") as f:
-            f.write(html_source)
-        
-        # スクリーンショット撮影
-        driver.save_screenshot("debug_screenshot.png")
-        print("デバッグ用ファイル(html, png)を保存しました。")
-
-        # 判定ロジック
-        available_slots = calendar_table.find_elements(By.CLASS_NAME, "staHav")
-        
-        # デバッグ：テーブル内のテキストを少し出力してみる
-        print(f"テーブル内のテキスト抜粋: {calendar_table.text[:200].replace(chr(10), ' ')}...")
-
-        if len(available_slots) > 0:
-            print(f"★空き枠を {len(available_slots)} 箇所発見！")
-            send_line_notify(f"\nJAL工場見学の空きが出ました！({len(available_slots)}箇所)\n{TARGET_URL}")
-        else:
-            print("空き枠は見つかりませんでした（staHavクラスなし）。")
-            # 念のため、staNon（満席）があるか確認してログに出す
-            full_slots = calendar_table.find_elements(By.CLASS_NAME, "staNon")
-            print(f"参考: 満席枠(staNon)は {len(full_slots)} 箇所見つかりました。")
+            print("【異常】カレンダーが見つかりません。")
+            print("▼▼▼ 現在のページ全体のHTMLを表示します ▼▼▼")
+            print(driver.page_source[:4000]) # ページ全体の最初の4000文字を表示
+            print("▲▲▲ HTML終わり ▲▲▲")
 
     except Exception as e:
         print(f"エラー発生: {e}")
-        # エラー時もスクショを撮る
-        driver.save_screenshot("error_screenshot.png")
-        with open("error_page.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
+        
     finally:
         driver.quit()
         print("--- 監視終了 ---")
