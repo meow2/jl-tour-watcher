@@ -14,10 +14,11 @@ from selenium.webdriver.support import expected_conditions as EC
 LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_NOTIFY_TOKEN')
 LINE_GROUP_ID = os.environ.get('LINE_GROUP_ID')
 
-# 通知済みデータを管理するファイル名
+# 通知設定
 HISTORY_FILE = "notified_dates.txt"
+REQUIRED_PEOPLE = 2  # ★ここを2名以上に設定（1名の空きは無視する）
 
-# 時間帯マッピング
+# 時間帯マッピング (HTMLの列順)
 TIME_SLOTS = ["09:30", "10:45", "12:50", "13:00", "13:30", "14:45", "16:30"]
 
 def get_target_url():
@@ -30,7 +31,8 @@ def get_target_url():
         next_year = now.year
         next_month = now.month + 1
     
-    url = f"https://jalfactorytour.my.salesforce-sites.com/rselectcourse?month={next_month}&numberOfPeople=2&useWheelchair=%25E4%25B8%258D%25E8%25A6%2581%2BUnnecessary&year={next_year}&sfdcIFrameOrigin=null"
+    # URLパラメータも指定しますが、ページ内のJS制御が強いため参考程度
+    url = f"https://jalfactorytour.my.salesforce-sites.com/rselectcourse?month={next_month}&numberOfPeople={REQUIRED_PEOPLE}&useWheelchair=%25E4%25B8%258D%25E8%25A6%2581%2BUnnecessary&year={next_year}&sfdcIFrameOrigin=null"
     print(f"監視対象年月: {next_year}年{next_month}月")
     print(f"URL: {url}")
     return url
@@ -70,7 +72,6 @@ def send_line_notify(message_text):
 def check_availability():
     print("--- 監視開始 ---")
     notified_ids = load_notified_ids()
-    print(f"通知済みID数: {len(notified_ids)}")
 
     options = Options()
     options.add_argument('--headless')
@@ -86,13 +87,10 @@ def check_availability():
         driver.get(target_url)
         wait = WebDriverWait(driver, 30)
         
-        # カレンダー枠の出現を待つ
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "tStyleC")))
         
-        # 【追加】一番下までスクロールして、遅延読み込み要素を描画させる
+        # 全ての要素を読み込ませるために下までスクロール
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        
-        # 【修正】待機時間を長くする（3秒→10秒）
         print("ページ読み込み待機中(10秒)...")
         time.sleep(10)
 
@@ -100,19 +98,21 @@ def check_availability():
         print(f"ページ内に {len(tables)} 個のカレンダーが見つかりました。")
 
         new_slots_msg = []
-        found_count = 0
         
         for table in tables:
+            # 行（tr）を走査
             rows = table.find_elements(By.TAG_NAME, "tr")
             current_date_text = "日付不明"
 
             for row in rows:
+                # --- 日付の取得 ---
                 ths = row.find_elements(By.TAG_NAME, "th")
                 if ths:
                     text = ths[0].text.strip()
                     if "コース" not in text and text != "": 
                         current_date_text = text
                 
+                # --- コースと空き確認 ---
                 tds = row.find_elements(By.TAG_NAME, "td")
                 if not tds: continue
 
@@ -122,24 +122,41 @@ def check_availability():
                     cell = tds[i]
                     time_str = TIME_SLOTS[i-1] if (i-1) < len(TIME_SLOTS) else "時間不明"
 
-                    # staHav（空き）クラスを探す
+                    # 空き（staHav）があるかチェック
                     if cell.find_elements(By.CLASS_NAME, "staHav"):
-                        found_count += 1
                         try:
-                            icon_alt = cell.find_element(By.TAG_NAME, "img").get_attribute("alt")
+                            img = cell.find_element(By.TAG_NAME, "img")
+                            icon_alt = img.get_attribute("alt").strip()
                         except:
                             icon_alt = "空き"
 
-                        slot_id = f"{current_date_text}_{time_str}_{course_name}_{icon_alt}"
+                        # 【判定ロジック修正】 2人以上予約できるか？
+                        is_bookable = False
                         
-                        if slot_id not in notified_ids:
-                            msg = f"📅 {current_date_text}\n⏰ {time_str} : {icon_alt}\n🏭 {course_name}"
-                            new_slots_msg.append(msg)
-                            save_notified_id(slot_id)
-                            notified_ids.add(slot_id)
-                            print(f"★新規発見: {msg.replace(chr(10), ' ')}")
-                        else:
-                            print(f"スキップ(通知済み): {current_date_text} {time_str} {icon_alt}")
+                        # ○, △, ◎ は無条件でOK（通常6席以上あるため）
+                        if icon_alt in ['○', '△', '◎']:
+                            is_bookable = True
+                        # 数字の場合は、指定人数(2)以上あるかチェック
+                        elif icon_alt.isdigit():
+                            if int(icon_alt) >= REQUIRED_PEOPLE:
+                                is_bookable = True
+                            else:
+                                print(f"除外: 残り{icon_alt}席のためスキップ ({current_date_text} {time_str})")
+                        
+                        if is_bookable:
+                            # ID作成（日付＋時間＋コース＋残席数）
+                            slot_id = f"{current_date_text}_{time_str}_{course_name}_{icon_alt}"
+                            
+                            if slot_id not in notified_ids:
+                                # 日付の重複表示を修正: 単に current_date_text だけを使用
+                                msg = f"📅 {current_date_text}\n⏰ {time_str} : {icon_alt}\n🏭 {course_name}"
+                                new_slots_msg.append(msg)
+                                
+                                save_notified_id(slot_id)
+                                notified_ids.add(slot_id)
+                                print(f"★新規発見: {msg.replace(chr(10), ' ')}")
+                            else:
+                                print(f"スキップ(通知済み): {current_date_text} {time_str} {icon_alt}")
 
         if len(new_slots_msg) > 0:
             msg_body = "\n\n".join(new_slots_msg)
@@ -149,17 +166,13 @@ def check_availability():
                 f"{msg_body}\n\n"
                 f"予約URL:\n{target_url}"
             )
-            if len(message) > 2000:
+            # 文字数制限対策
+            if len(message) > 1900:
                 message = message[:1900] + "\n...(以下省略)"
+            
             send_line_notify(message)
         else:
             print("新規の空き枠はありませんでした。")
-            if found_count == 0:
-                print("【警告】空き枠(staHav)が1つも見つかりませんでした。読み込み失敗の可能性があります。")
-                # デバッグ: 最初のテーブルのHTMLを出力してみる
-                if len(tables) > 0:
-                    print("▼▼▼ テーブルHTML抜粋 ▼▼▼")
-                    print(tables[-1].get_attribute('outerHTML')[:1000])
 
     except Exception as e:
         print(f"エラー発生: {e}")
