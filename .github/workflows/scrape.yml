@@ -1,9 +1,11 @@
 name: JAL Factory Tour Monitor
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+  # schedule:         <-- cronは削除またはコメントアウト
+  #   - cron: '*/30 * * * *' 
+  repository_dispatch: # ★これを追加（外部からのWebhookを受け取る設定）
+    types: [run-scraper]
+  workflow_dispatch:   # 手動実行ボタンも残しておく
 
 jobs:
   scrape:
