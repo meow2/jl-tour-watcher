@@ -1,4 +1,8 @@
-LAST_RUN::2025-12-15
+LAST_RUN::2025-12-16
+12月24日(水)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
+12月24日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
+12月24日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::○
+12月24日(水)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
 1月8日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 1月8日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::△
 1月9日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::5
@@ -7,16 +11,4 @@ LAST_RUN::2025-12-15
 1月13日(火)_13:30_工場見学コース(有料) Factory tour course(Fee)::5
 1月15日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
 1月15日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::5
-1月15日(木)_12:50_機内食体験・FUJI号プレミアムコース 洋食(有料) In-flight meal&Fuji Premium course Western food(Fee)::△
-1月10日(土)_10:45_工場見学コース(有料) Factory tour course(Fee)::2
-1月15日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
-12月24日(水)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
-12月24日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
-12月24日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::○
-12月24日(水)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
-12月20日(土)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
-1月6日(火)_14:45_工場見学コース(有料) Factory tour course(Fee)::3
-12月18日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
-1月12日(月)_16:30_工場見学コース(有料) Factory tour course(Fee)::2
-1月11日(日)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
-12月23日(火)_10:45_工場見学コース(有料) Factory tour course(Fee)::2
+1月15日(木)_12:50_機内食体験・FUJI号プレミアムコース 洋食(有料) In-flight meal&Fuji Premium course Western food(Fee)::4
