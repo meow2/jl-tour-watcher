@@ -2,7 +2,7 @@ LAST_RUN::2025-12-18
 12月22日(月)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
 12月24日(水)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 12月24日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
-12月24日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::△
+12月24日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::○
 12月24日(水)_14:45_工場見学コース(有料) Factory tour course(Fee)::3
 1月8日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 1月9日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
@@ -12,6 +12,6 @@ LAST_RUN::2025-12-18
 1月15日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
 1月16日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 1月16日(金)_13:30_工場見学コース(有料) Factory tour course(Fee)::○
-1月18日(日)_09:30_工場見学コース(有料) Factory tour course(Fee)::4
+1月18日(日)_09:30_工場見学コース(有料) Factory tour course(Fee)::3
 1月18日(日)_10:45_工場見学コース(有料) Factory tour course(Fee)::4
 1月18日(日)_14:45_工場見学コース(有料) Factory tour course(Fee)::△
