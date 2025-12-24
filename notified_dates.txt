@@ -1,5 +1,5 @@
 LAST_RUN::2025-12-24
-1月13日(火)_09:30_工場見学コース(有料) Factory tour course(Fee)::5
+1月13日(火)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
 1月15日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::2
 1月16日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::5
 1月16日(金)_13:30_工場見学コース(有料) Factory tour course(Fee)::3
@@ -9,5 +9,5 @@ LAST_RUN::2025-12-24
 1月23日(金)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
 1月24日(土)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
 1月24日(土)_10:45_工場見学コース(有料) Factory tour course(Fee)::2
-1月24日(土)_14:45_工場見学コース(有料) Factory tour course(Fee)::3
+1月24日(土)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
 1月24日(土)_13:00_JAL STEAM SCHOOL(有料) JAL STEAM SCHOOL(Fee)::2
