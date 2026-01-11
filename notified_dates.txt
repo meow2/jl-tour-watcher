@@ -2,7 +2,7 @@ LAST_RUN::2026-01-11
 1月14日(水)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 1月21日(水)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 1月21日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
-1月28日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::3
+1月28日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::5
 2月6日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::3
 2月9日(月)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 2月9日(月)_16:30_工場見学コース(有料) Factory tour course(Fee)::△
@@ -10,4 +10,4 @@ LAST_RUN::2026-01-11
 2月10日(火)_16:30_工場見学コース(有料) Factory tour course(Fee)::○
 2月10日(火)_13:30_ライフベスト着用体験コース(有料) Life Vest Wearing Experience Course(Fee)::△
 1月26日(月)_13:30_工場見学コース(有料) Factory tour course(Fee)::2
-1月22日(木)_12:50_機内食体験・FUJI号プレミアムコース 洋食(有料) In-flight meal&Fuji Premium course Western food(Fee)::3
+1月22日(木)_12:50_機内食体験・FUJI号プレミアムコース 洋食(有料) In-flight meal&Fuji Premium course Western food(Fee)::2
