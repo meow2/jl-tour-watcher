@@ -3,7 +3,7 @@ LAST_RUN::2026-04-03
 4月13日(月)_13:00_JAL STEAM SCHOOL(有料) JAL STEAM SCHOOL(Fee)::3
 4月14日(火)_09:30_工場見学コース(有料) Factory tour course(Fee)::3
 4月14日(火)_10:45_工場見学コース(有料) Factory tour course(Fee)::△
-4月15日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::3
+4月15日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::△
 4月15日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::○
 4月15日(水)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
 4月16日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::4
@@ -23,7 +23,7 @@ LAST_RUN::2026-04-03
 4月28日(火)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
 4月30日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 4月30日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::△
-5月1日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
+5月1日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::△
 4月15日(水)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 5月2日(土)_10:45_工場見学コース(有料) Factory tour course(Fee)::4
 5月3日(日)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
