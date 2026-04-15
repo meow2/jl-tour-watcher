@@ -11,7 +11,7 @@ LAST_RUN::2026-04-15
 5月7日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::2
 5月7日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::△
 5月8日(金)_14:45_工場見学コース(有料) Factory tour course(Fee)::△
-5月11日(月)_09:30_工場見学コース(有料) Factory tour course(Fee)::△
+5月11日(月)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 5月11日(月)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
 5月11日(月)_14:45_工場見学コース(有料) Factory tour course(Fee)::△
 5月11日(月)_13:00_JAL STEAM SCHOOL(有料) JAL STEAM SCHOOL(Fee)::2
@@ -24,4 +24,4 @@ LAST_RUN::2026-04-15
 5月14日(木)_12:50_機内食体験・FUJI号プレミアムコース 洋食(有料) In-flight meal&Fuji Premium course Western food(Fee)::2
 5月15日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
 5月15日(金)_13:30_工場見学コース(有料) Factory tour course(Fee)::△
-4月24日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::3
+4月24日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
