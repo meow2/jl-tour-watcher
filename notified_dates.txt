@@ -1,5 +1,4 @@
-LAST_RUN::2026-05-04
-5月12日(火)_13:30_工場見学コース(有料) Factory tour course(Fee)::2
+LAST_RUN::2026-05-05
 5月13日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
 5月13日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::△
 5月13日(水)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
@@ -7,14 +6,7 @@ LAST_RUN::2026-05-04
 5月20日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
 5月20日(水)_13:30_工場見学コース(有料) Factory tour course(Fee)::○
 5月20日(水)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
-5月15日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
 6月4日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 6月4日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::○
 6月4日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::○
-6月4日(木)_12:50_機内食体験・FUJI号プレミアムコース 和食(有料) In-flight meal&Fuji Premium course Japanese food(Fee)::3
-6月2日(火)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
-5月9日(土)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
-5月28日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
-5月7日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::2
-5月15日(金)_13:30_工場見学コース(有料) Factory tour course(Fee)::2
-5月7日(木)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
+6月4日(木)_12:50_機内食体験・FUJI号プレミアムコース 和食(有料) In-flight meal&Fuji Premium course Japanese food(Fee)::2
