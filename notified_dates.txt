@@ -10,7 +10,7 @@ LAST_RUN::2026-05-06
 5月25日(月)_13:30_工場見学コース(有料) Factory tour course(Fee)::2
 5月25日(月)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
 5月27日(水)_10:45_工場見学コース(有料) Factory tour course(Fee)::△
-5月29日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
+5月29日(金)_09:30_工場見学コース(有料) Factory tour course(Fee)::△
 6月1日(月)_14:45_工場見学コース(有料) Factory tour course(Fee)::2
 6月4日(木)_09:30_工場見学コース(有料) Factory tour course(Fee)::○
 6月4日(木)_10:45_工場見学コース(有料) Factory tour course(Fee)::4
